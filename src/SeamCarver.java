@@ -1,37 +1,26 @@
 import edu.princeton.cs.algs4.Picture;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Stopwatch;
+
 import java.awt.Color;
 public class SeamCarver {
 	private ShortestPath sp;
 	private double [][] energy;
-	private Color[][] Picture;
+	private Picture Picture;
 	private int H,W;
 	public SeamCarver(Picture picture) {
 		if(picture == null)
 			throw new IllegalArgumentException();
 		this.W = picture.width();
 		this.H = picture.height();
-		setMatrices(picture);
+		Picture = new Picture(picture);
+		setEnergy(picture);
 		sp = new ShortestPath();
 	}
-	/*private SeamCarver(double[][] e,Picture p) {
-		this.energy = e;
-		this.H = 5;
-		this.W = 6;
-		Picture = new Color[6][5];
-		for(int i=0 ; i<W ; i++)
-			for(int j=0 ; j<H; j++) {
-				Picture[i][j] = Color.BLACK;
-			}
-		sp = new ShortestPath();
-	}
-	*/
 	//current picture
 	public Picture picture() {
-		Picture P = new Picture(W,H);
-		for(int i=0 ; i<W ; i++)
-			for(int j=0 ; j<H ; j++)
-				P.set(i, j, Picture[i][j]);
-		return P;
+		Picture p = new Picture(Picture);
+		return p;
 	}
 	// width of current picture
 	public int width() {
@@ -93,50 +82,37 @@ public class SeamCarver {
 	}
 	//  unit testing (optional)
 	public static void main(String[] args) {
-		/*double[][] arr = new double[6][5];
-		arr[0][0] = 1000;
-		arr[0][1] = 1000;
-		arr[0][2] = 1000;
-		arr[0][3] = 1000;
-		arr[0][4] = 1000;
-		arr[1][0] = 1000;
-		arr[1][1] = 237.35;
-		arr[1][2] = 138.69;
-		arr[1][3] = 153.88;
-		arr[1][4] = 1000;
-		arr[2][0] = 1000;
-		arr[2][1] = 151.02;
-		arr[2][2] = 288.10;
-		arr[2][3] = 174.07;
-		arr[2][4] = 1000;
-		arr[3][0] = 1000;
-		arr[3][1] = 234.09;
-		arr[3][2] = 133.01;
-		arr[3][3] = 284.01;
-		arr[3][4] = 1000;
-		arr[4][0] = 1000;
-		arr[4][1] = 107.89;
-		arr[4][2] = 211.57;
-		arr[4][3] = 194.50;
-		arr[4][4] = 1000;
-		arr[5][0] = 1000;
-		arr[5][1] = 1000;
-		arr[5][2] = 1000;
-		arr[5][3] = 1000;
-		arr[5][4] = 1000;
-		Picture p = new Picture(6,5);
-		SeamCarver s = new SeamCarver(arr,p);
-		int[] sp = {1,3,2,5,4};
-		s.removeVerticalSeam(sp);*/
+	       if (args.length != 3) {
+	            StdOut.println("Usage:\njava ResizeDemo [image filename] [num cols to remove] [num rows to remove]");
+	            return;
+	        }
+
+	        Picture inputImg = new Picture(args[0]);
+	        int removeColumns = Integer.parseInt(args[1]);
+	        int removeRows = Integer.parseInt(args[2]); 
+
+	        StdOut.printf("image is %d columns by %d rows\n", inputImg.width(), inputImg.height());
+	        SeamCarver sc = new SeamCarver(inputImg);
+
+	        Stopwatch sw = new Stopwatch();
+
+	        for (int i = 0; i < removeRows; i++) {
+	            int[] horizontalSeam = sc.findHorizontalSeam();
+	            sc.removeHorizontalSeam(horizontalSeam);
+	        }
+
+	        for (int i = 0; i < removeColumns; i++) {
+	            int[] verticalSeam = sc.findVerticalSeam();
+	            sc.removeVerticalSeam(verticalSeam);
+	        }
+	        Picture outputImg = sc.picture();
+
+	        StdOut.printf("new image size is %d columns by %d rows\n", sc.width(), sc.height());
+
+	        StdOut.println("Resizing time: " + sw.elapsedTime() + " seconds.");
+	        inputImg.show();
+	        outputImg.show();
 	}
-	/*private void printE() {
-		for(int j=0 ; j<H ; j++) {
-			for(int i=0 ; i<W ; i++) {
-				System.out.print(energy[i][j]+" ");
-			}
-			System.out.println(" ");
-		}
-	}*/
 	//checks if coordinates of a pixel is in the picture
 	private boolean check(int col,int row) {
 		if(col>=0 && col<W && row>=0 && row<H)
@@ -144,21 +120,13 @@ public class SeamCarver {
 		return false;
 	}
 	//create 2D array of pixels energies
-	private void setMatrices(Picture p) {
-		Picture = new Color[W][H];
+	private void setEnergy(Picture p) {
 		energy = new double[W][H];
 		for(int i=0 ; i<W; i++)
 			for(int j=0; j<H; j++) {
 				energy[i][j] = energyOfpixel(i,j,p);
-				Picture[i][j] = p.get(i, j);
 			}
 	}
-	/*private void recalculateEnergy() {
-		for(int i=0 ; i<W; i++)
-			for(int j=0; j<H; j++) {
-				energy[i][j] = energyOfpixel(i,j,);
-			}
-	}*/
 	//calculates the energy of a certain pixel
 	private double energyOfpixel(int col,int row,Picture P) {
 		if(col == 0 || col == P.width()-1 || row == 0 || row == P.height()-1)
@@ -195,6 +163,7 @@ public class SeamCarver {
 		int DeltaY = (Rx*Rx) + (Gx*Gx) + (Bx*Bx);
 		return Math.sqrt(DeltaX+DeltaY);
 	}
+	// transposes energy matrix
 	private double[][] transpose(double[][] arr) {
 		int width = arr.length;
 		int height = arr[0].length;
@@ -206,38 +175,58 @@ public class SeamCarver {
 		}
 		return ans;
 	}
+	//reconstruct the seam after vertical seam removal
 	private void reconstructVertical(int w,int h) {
 		double[][] newEnergy = new double[w][h];
 		Color[][] newPic = new Color[w][h];
+		Color[][] P = pic2mat(Picture);
 		for(int i=0;i<w;i++) {
 			for(int j=0 ; j<h ; j++) {
 				if(energy[i][j] == Double.MIN_VALUE) {
 					energy[i][j] = energy[i+1][j];
-					Picture[i][j] = Picture[i+1][j];
+					P[i][j] = P[i+1][j];
 					energy[i+1][j] = Double.MIN_VALUE;
 				} 
 				newEnergy[i][j] = energy[i][j];
-				newPic[i][j] = Picture[i][j];
+				newPic[i][j] = P[i][j];
 			}
 		}
-		this.Picture = newPic;
-		this.energy = newEnergy;
+		mat2pic(newPic);
+		setEnergy(Picture);
 	}
+	//reconstructs the picture after horizontal seam removal
 	private void reconstructHorizontal(int w,int h) {
 		double[][] newEnergy = new double[w][h];
 		Color[][] newPic = new Color[w][h];
+		Color[][] P = pic2mat(Picture);
 		for(int j=0;j<h;j++) {
 			for(int i=0 ; i<w ; i++) {
 				if(energy[i][j] == Double.MIN_VALUE ) {
 					energy[i][j] = energy[i][j+1];
-					Picture[i][j] = Picture[i][j+1];
+					P[i][j] = P[i][j+1];
 					energy[i][j+1] = Double.MIN_VALUE;
 				}
 				newEnergy[i][j] = energy[i][j];
-				newPic[i][j] = Picture[i][j];
+				newPic[i][j] = P[i][j];
 			}
 		}
-		this.Picture = newPic;
-		this.energy = newEnergy;
+		mat2pic(newPic);
+		setEnergy(Picture);
 	}
-}
+	//return color matrix representing each pixel
+	private Color[][] pic2mat (Picture p){
+		Color[][] dummy = new Color[p.width()][p.height()];
+		for(int i=0 ; i<p.width() ; i++)
+			for(int j=0 ;j<p.height() ;j++)
+				dummy[i][j] = p.get(i, j);
+		return dummy;
+	}
+	//convert Color matrix to picture
+	private void mat2pic(Color[][] arr) {
+		Picture p = new Picture(arr.length,arr[0].length);
+		for(int i=0 ; i<arr.length ; i++)
+			for(int j=0 ;j<arr[0].length ;j++)
+				p.set(i, j, arr[i][j]);
+		this.Picture = p;
+	}
+ }

@@ -1,4 +1,5 @@
 public class ShortestPath {
+	//calculates the shortest seam of a given 2D array of energies of a picture using Topological algorithm 
 	public int[] shortestPath(double[][] arr) {
 		int h = arr[0].length;
 		int w = arr.length;
@@ -53,14 +54,6 @@ public class ShortestPath {
 						}
 					}
 				}
-				
-			/*	System.out.println("Distances");
-				print(distanceTo);
-				System.out.println(" ");
-				System.out.println("vertex");
-				print(vertexTo);
-				System.out.println(" ");
-				System.out.println("////////////////");*/
 			}
 		}
 		index = h*w;
@@ -71,13 +64,6 @@ public class ShortestPath {
 				distanceTo[index] = distanceTo[ind];
 				vertexTo[index] = ind; 
 			}
-		/*	System.out.println("Distances");
-			print(distanceTo);
-			System.out.println(" ");
-			System.out.println("vertex");
-			print(vertexTo);
-			System.out.println(" ");
-			System.out.println("////////////////"); */
 		}
 		int[] ans = new int[h];
 		for(int i= h-1 ; i>=0 ;i--) {
@@ -85,27 +71,5 @@ public class ShortestPath {
 			ans[i] = index % w;
 		}
 		return ans;
-	}
-	/*private void print(double[] d) {
-		for(int i=0 ; i<d.length ; i++)
-			System.out.print(d[i]+" ");
-	}
-	private void print(int[] d) {
-		for(int i=0 ; i<d.length ; i++)
-			System.out.print(d[i]+" ");
-	}*/
-	public static void main (String[] args) {
-		/*ShortestPath sp = new ShortestPath();
-		double[][] arr = new double[1][8];
-		arr[0][1] = 1000;
-		arr[0][2] = 1000;
-		arr[0][3] = 1000;
-		arr[0][4] = 1000;
-		arr[0][5] = 1000;
-		arr[0][6] = 1000;
-		arr[0][7] = 1000;
-		int[] ans = sp.shortestPath(arr);
-		for(int i=0 ; i<ans.length ; i++)
-			System.out.print(ans[i]+"  ");*/
 	}
 }
