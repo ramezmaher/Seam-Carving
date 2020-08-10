@@ -54,7 +54,7 @@ public class ShortestPath {
 					}
 				}
 				
-				/*System.out.println("Distances");
+			/*	System.out.println("Distances");
 				print(distanceTo);
 				System.out.println(" ");
 				System.out.println("vertex");
@@ -71,13 +71,13 @@ public class ShortestPath {
 				distanceTo[index] = distanceTo[ind];
 				vertexTo[index] = ind; 
 			}
-			/*System.out.println("Distances");
+		/*	System.out.println("Distances");
 			print(distanceTo);
 			System.out.println(" ");
 			System.out.println("vertex");
 			print(vertexTo);
 			System.out.println(" ");
-			System.out.println("////////////////");*/
+			System.out.println("////////////////"); */
 		}
 		int[] ans = new int[h];
 		for(int i= h-1 ; i>=0 ;i--) {
@@ -86,49 +86,26 @@ public class ShortestPath {
 		}
 		return ans;
 	}
-	private void print(double[] d) {
+	/*private void print(double[] d) {
 		for(int i=0 ; i<d.length ; i++)
 			System.out.print(d[i]+" ");
 	}
 	private void print(int[] d) {
 		for(int i=0 ; i<d.length ; i++)
 			System.out.print(d[i]+" ");
-	}
+	}*/
 	public static void main (String[] args) {
-		ShortestPath sp = new ShortestPath();
-		double[][] arr = new double[6][5];
-		arr[0][0] = 1000;
-		arr[1][0] = 1000;
-		arr[2][0] = 1000;
-		arr[3][0] = 1000;
-		arr[4][0] = 1000;
-		arr[5][0] = 1000;
+		/*ShortestPath sp = new ShortestPath();
+		double[][] arr = new double[1][8];
 		arr[0][1] = 1000;
-		arr[1][1] = 237.35;
-		arr[2][1] = 151.02;
-		arr[3][1] = 234.09;
-		arr[4][1] = 107.89;
-		arr[5][1] = 1000;
 		arr[0][2] = 1000;
-		arr[1][2] = 138.69;
-		arr[2][2] = 228.10;
-		arr[3][2] = 133.07;
-		arr[4][2] = 211.51;
-		arr[5][2] = 1000;
 		arr[0][3] = 1000;
-		arr[1][3] = 153.88;
-		arr[2][3] = 174.01;
-		arr[3][3] = 284.01;
-		arr[4][3] = 194.50;
-		arr[5][3] = 1000;
 		arr[0][4] = 1000;
-		arr[1][4] = 1000;
-		arr[2][4] = 1000;
-		arr[3][4] = 1000;
-		arr[4][4] = 1000;
-		arr[5][4] = 1000;
+		arr[0][5] = 1000;
+		arr[0][6] = 1000;
+		arr[0][7] = 1000;
 		int[] ans = sp.shortestPath(arr);
 		for(int i=0 ; i<ans.length ; i++)
-			System.out.print(ans[i]+"  ");
+			System.out.print(ans[i]+"  ");*/
 	}
 }
